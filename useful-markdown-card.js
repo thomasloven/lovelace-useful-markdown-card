@@ -7,7 +7,18 @@ class UsefulMarkdownCard extends HTMLElement {
     this.shadowRoot.appendChild(this.md);
   }
 
+  process(text) {
+    text = text.replace(/\[\[(.*?)\]\]/g, 'match');
+    console.log(text);
+    return text;
+  }
+
   setConfig(config) {
+    this.title = config.title;
+    this.content = config.content;
+
+    config.title = this.process(this.title);
+    config.content = this.process(this.content);
     this.md.setConfig(config);
   }
 
