@@ -1,11 +1,38 @@
-class UsefulMarkdownCard extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({mode:'open'});
-    this.md = document.createElement('hui-markdown-card');
+class UsefulMarkdownCard extends Polymer.Element {
 
-    this.shadowRoot.appendChild(this.md);
-    this._hass = null;
+  static get template() {
+    return Polymer.html`
+    <style>
+      :host {
+        @apply --paper-font-body1;
+      }
+      ha-markdown {
+        display: block;
+        padding: 0 16px 16px;
+        -ms-user-select: initial;
+        -webkit-user-select: initial;
+        -moz-user-select: initial;
+      }
+      :host([no-title]) ha-markdown {
+        padding-top: 16px;
+      }
+      ha-markdown > *:first-child {
+        margin-top: 0;
+      }
+      ha-markdown > *:last-child {
+        margin-bottom: 0;
+      }
+      ha-markdown a {
+        color: var(--primary-color);
+      }
+      ha-markdown img {
+        max-width: 100%;
+      }
+    </style>
+      <ha-card header="[[title]]">
+      <ha-markdown content='[[renderedContent]]'></ha-markdown>
+      </ha-card>
+    `;
   }
 
   handleTemplate(str) {
@@ -27,22 +54,29 @@ class UsefulMarkdownCard extends HTMLElement {
   }
 
   setConfig(config) {
+    this._config = config;
     this.title = config.title;
     this.content = config.content;
-    this._config = config;
+  }
 
-    config.title = this.process(this.title);
-    config.content = this.process(this.content);
-    this.md.setConfig(this._config);
+  static get properties() {
+    return {
+      _config: Object,
+      noTitle: {
+        type: Boolean,
+        reflectToAttribute: true,
+        computed: '_computeNoTitle(_config.title)',
+      },
+    };
+  }
+
+  _computeNoTitle(title) {
+    return !title;
   }
 
   set hass(hass) {
     this._hass = hass;
-    this.md.hass = hass;
-    this._config.title = this.process(this.title);
-    this._config.content = this.process(this.content);
-    this.md.setConfig(this._config);
-    this.md.hass = hass;
+    this.renderedContent = this.process(this.content);
   }
 }
 
