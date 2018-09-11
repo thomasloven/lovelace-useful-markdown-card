@@ -8,13 +8,9 @@ class UsefulMarkdownCard extends Polymer.Element {
       }
       ha-markdown {
         display: block;
-        padding: 0 16px 16px;
         -ms-user-select: initial;
         -webkit-user-select: initial;
         -moz-user-select: initial;
-      }
-      :host([no-title]) ha-markdown {
-        padding-top: 16px;
       }
       ha-markdown > *:first-child {
         margin-top: 0;
@@ -30,7 +26,7 @@ class UsefulMarkdownCard extends Polymer.Element {
       }
     </style>
       <ha-card header="[[title]]">
-      <ha-markdown content='[[renderedContent]]'></ha-markdown>
+      <ha-markdown id="md" content='[[renderedContent]]'></ha-markdown>
       </ha-card>
     `;
   }
@@ -57,6 +53,14 @@ class UsefulMarkdownCard extends Polymer.Element {
     this._config = config;
     this.title = config.title;
     this.content = config.content;
+    this.padding = config.padding || null;
+    if(!this.padding){
+      if(this.title){
+        this.padding = '0 16px 16px';
+      } else {
+        this.padding = '16px';
+      }
+    }
   }
 
   static get properties() {
@@ -74,8 +78,19 @@ class UsefulMarkdownCard extends Polymer.Element {
     return !title;
   }
 
+  getCardSize()
+  {
+    return this.content.split('\n').length;
+  }
+
   set hass(hass) {
     this._hass = hass;
+    if(this.$){
+      console.log(this.$.md.style.padding);
+      if(!this.$.md.style.padding){
+        this.$.md.style.padding = this.padding;
+      }
+    }
     this.renderedContent = this.process(this.content);
   }
 }
