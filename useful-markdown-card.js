@@ -86,7 +86,6 @@ class UsefulMarkdownCard extends Polymer.Element {
   set hass(hass) {
     this._hass = hass;
     if(this.$){
-      console.log(this.$.md.style.padding);
       if(!this.$.md.style.padding){
         this.$.md.style.padding = this.padding;
       }
