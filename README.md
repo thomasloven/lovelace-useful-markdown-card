@@ -19,3 +19,4 @@ useful-markdown-card
 Options:
 
 - `padding` -  Adjust padding of markdown card (default `'16px'`)
+- `fontSize` -  Adjust font-size of markdown card 

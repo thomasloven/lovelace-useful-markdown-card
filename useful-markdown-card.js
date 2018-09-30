@@ -54,6 +54,7 @@ class UsefulMarkdownCard extends Polymer.Element {
     this.title = config.title;
     this.content = config.content;
     this.padding = config.padding || null;
+    this.fontSize = config.fontSize|| null;
     if(!this.padding){
       if(this.title){
         this.padding = '0 16px 16px';
@@ -88,6 +89,9 @@ class UsefulMarkdownCard extends Polymer.Element {
     if(this.$){
       if(!this.$.md.style.padding){
         this.$.md.style.padding = this.padding;
+      }
+      if(!this.$.md.style.fontSize){
+        this.$.md.style.fontSize= this.fontSize;
       }
     }
     this.renderedContent = this.process(this.content);
