@@ -36,12 +36,16 @@ class UsefulMarkdownCard extends Polymer.Element {
     str = str.replace(/^\s+|\s+$/g, '');
     let parts = str.split(".");
     let v = this._hass.states[parts[0]+'.'+parts[1]];
+    try {
     parts.shift();
     parts.shift();
     parts.forEach(item => {
       v = v[item];
     });
     return v;
+    } catch (err) {
+      return `[[ matching failed: ${str} ]]`;
+    }
   }
 
   process(text) {
