@@ -1,36 +1,42 @@
 customElements.whenDefined('card-tools').then(() => {
-class UsefulMarkdownCard extends cardTools.litElement() {
+class UsefulMarkdownCard extends cardTools.LitElement {
 
-  setConfig(config) {
+  async setConfig(config) {
     this._config = config;
     this.cardConfig = {type: "markdown", ...config};
     this.cardConfig.type = "markdown";
-    this.cardConfig.content = cardTools.parseTemplate(this._config.content);
-
-    this.card = cardTools.createCard(this.cardConfig);
-    window.addEventListener("location-changed", () => this.hass = this._hass);
+    this.update_content();
+    window.addEventListener("location-changed", () => this.update_content() );
   }
 
   render() {
-    return cardTools.litHtml()`
+    return cardTools.LitHtml`
     <div id="root">${this.card}</div>
     `;
   }
 
   getCardSize()
   {
-    return this.card.getCardSize();
+    return this.card.getCardSize ? this.card.getCardSize() : 1;
+  }
+
+  async update_content() {
+    const newContent = cardTools.parseTemplate(this._config.content);
+    if(newContent != this.oldContent) {
+      this.oldContent = newContent;
+      this.cardConfig.content = newContent;
+      if(!this.card)
+        this.card = cardTools.createCard(this.cardConfig);
+      else
+        this.card.setConfig(this.cardConfig);
+      if(this.card.requestUpdate)
+        this.card.requestUpdate();
+    }
   }
 
   set hass(hass) {
     this._hass = hass;
-    if(this.card)
-    {
-      this.card.hass = hass;
-      this.cardConfig.content = cardTools.parseTemplate(this._config.content);
-      this.card.setConfig(this.cardConfig);
-      this.card.requestUpdate();
-    }
+    this.update_content()
   }
 }
 
