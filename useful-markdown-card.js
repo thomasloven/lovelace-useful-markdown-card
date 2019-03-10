@@ -1,4 +1,5 @@
 customElements.whenDefined('card-tools').then(() => {
+let cardTools = customElements.get('card-tools');
 class UsefulMarkdownCard extends cardTools.LitElement {
 
   async setConfig(config) {
@@ -17,6 +18,7 @@ class UsefulMarkdownCard extends cardTools.LitElement {
 
   getCardSize()
   {
+    if(!this.card) return 1;
     return this.card.getCardSize ? this.card.getCardSize() : 1;
   }
 
