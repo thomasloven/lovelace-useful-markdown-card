@@ -4,7 +4,10 @@ class UsefulMarkdownCard extends cardTools.LitElement {
 
   async setConfig(config) {
     this._config = config;
-    this.cardConfig = {type: "markdown", ...config};
+    this.cardConfig = Object.assign({
+      type: "markdown",
+    },
+      config);
     this.cardConfig.type = "markdown";
     this.update_content();
     window.addEventListener("location-changed", () => this.update_content() );
