@@ -37,7 +37,6 @@ Conditions are in the form `<left> <comparison> <right>` where `<left>` and `<ri
 
 `<comparison>` is one of `==`, `!=`, `<`, `>`, `<=` or `>=`.
 
-
 ## Example
 ```yaml
 
@@ -108,6 +107,25 @@ cards:
 ```
 
 ![useful-markdown-card mp4](https://user-images.githubusercontent.com/1299821/52882258-6062f000-3167-11e9-8cd3-d8caabeb7cb3.gif)
+
+## Styling
+
+You can also specify css styling to add to the html elements of the card.
+Specify it as normal css in a `style:` parameter.
+
+Example:
+
+```yaml
+type: custom:useful-markdown-card
+style: |
+  h1 {
+    color: red
+  }
+content: |
+  # This text is red
+
+  This text isn't
+```
 
 
 ---

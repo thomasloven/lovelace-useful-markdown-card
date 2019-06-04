@@ -34,8 +34,11 @@ class UsefulMarkdownCard extends cardTools.LitElement {
         this.card = cardTools.createCard(this.cardConfig);
       else
         this.card.setConfig(this.cardConfig);
-      if(this.card.requestUpdate)
-        this.card.requestUpdate();
+      this.card.requestUpdate();
+      await this.card.updateComplete;
+      const styleTag = document.createElement('style');
+      styleTag.innerHTML = this._config.style;
+      this.card.shadowRoot.querySelector("ha-card").appendChild(styleTag);
     }
   }
 
