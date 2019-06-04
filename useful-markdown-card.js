@@ -27,7 +27,8 @@ class UsefulMarkdownCard extends cardTools.LitElement {
 
   async update_content() {
     const newContent = cardTools.parseTemplate(this._config.content);
-    if(newContent != this.oldContent) {
+    const newStyle = cardTools.parseTemplate(this._config.style);
+    if(newContent != this.oldContent || newStyle != this.oldStyle) {
       this.oldContent = newContent;
       this.cardConfig.content = newContent;
       if(!this.card)
@@ -36,9 +37,17 @@ class UsefulMarkdownCard extends cardTools.LitElement {
         this.card.setConfig(this.cardConfig);
       this.card.requestUpdate();
       await this.card.updateComplete;
+
       const styleTag = document.createElement('style');
-      styleTag.innerHTML = this._config.style;
-      this.card.shadowRoot.querySelector("ha-card").appendChild(styleTag);
+      this.oldStyle = newStyle;
+      styleTag.innerHTML = newStyle;
+      if(this.card.shadowRoot && this.card.shadowRoot.querySelector("ha-card")) {
+        const oldStyleTag = this.card.shadowRoot.querySelector("ha-card style");
+        if(oldStyleTag)
+          this.card.shadowRoot.querySelector("ha-card").removeChild(oldStyleTag);
+        this.card.shadowRoot.querySelector("ha-card").appendChild(styleTag);
+      }
+
     }
   }
 
