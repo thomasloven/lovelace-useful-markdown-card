@@ -118,14 +118,23 @@ Example:
 ```yaml
 type: custom:useful-markdown-card
 style: |
+  ha-card {
+    padding: 16px;
+  }
   h1 {
-    color: red
+    text-align: center;
+    font-size: 64px;
+  }
+  h2 {
+    text-align: center;
+    color: var(--primary-color);
   }
 content: |
-  # This text is red
-
-  This text isn't
+  # [[ sensor.time ]]
+  ## [[ sensor.date ]]
 ```
+
+![Styling](https://user-images.githubusercontent.com/1299821/58908162-2286d900-8710-11e9-8592-06b864ef3d9b.png)
 
 
 ---
