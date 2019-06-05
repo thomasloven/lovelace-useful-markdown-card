@@ -4,56 +4,58 @@ class UsefulMarkdownCard extends cardTools.LitElement {
 
   async setConfig(config) {
     this._config = config;
-    this.cardConfig = Object.assign({
-      type: "markdown",
-    },
-      config);
-    this.cardConfig.type = "markdown";
-    this.update_content();
     window.addEventListener("location-changed", () => this.update_content() );
+  }
+
+  static get properties() {
+    return {
+      cardContent: {type: String},
+      cardStyle: {type: String},
+      hass: {type: Object},
+    };
+  }
+
+  update_content() {
+    this.cardContent = cardTools.parseTemplate(this._config.content);
+    this.cardStyle = cardTools.parseTemplate(this._config.style);
   }
 
   render() {
     return cardTools.LitHtml`
-    <div id="root">${this.card}</div>
+    <hui-markdown-card></hui-markdown-card>
     `;
+  }
+
+  async updated(changedProperties) {
+    const card = this.shadowRoot.querySelector("hui-markdown-card");
+    if(changedProperties.has('hass')) this.update_content();
+
+    if(!card) return;
+    if(changedProperties.has('cardContent')) {
+      card.setConfig(Object.assign(
+        {
+          type: "markdown",
+          title: this._config.title,
+          content: this.cardContent },
+      ));
+      card.requestUpdate();
+    }
+    if(changedProperties.has('cardStyle')) {
+      await card.updateComplete;
+      const haCard = card.shadowRoot.querySelector("ha-card");
+      if(haCard.querySelector("#umc-style"))
+        haCard.removeChild(haCard.querySelector("#umc-style"));
+      const styleTag = document.createElement('style');
+      styleTag.id = "umc-style";
+      styleTag.innerHTML = this.cardStyle;
+      haCard.appendChild(styleTag);
+    }
   }
 
   getCardSize()
   {
-    if(!this.card) return 1;
-    return this.card.getCardSize ? this.card.getCardSize() : 1;
-  }
-
-  async update_content() {
-    const newContent = cardTools.parseTemplate(this._config.content);
-    const newStyle = cardTools.parseTemplate(this._config.style);
-    if(newContent != this.oldContent || newStyle != this.oldStyle) {
-      this.oldContent = newContent;
-      this.cardConfig.content = newContent;
-      if(!this.card)
-        this.card = cardTools.createCard(this.cardConfig);
-      else
-        this.card.setConfig(this.cardConfig);
-      this.card.requestUpdate();
-      await this.card.updateComplete;
-
-      const styleTag = document.createElement('style');
-      this.oldStyle = newStyle;
-      styleTag.innerHTML = newStyle;
-      if(this.card.shadowRoot && this.card.shadowRoot.querySelector("ha-card")) {
-        const oldStyleTag = this.card.shadowRoot.querySelector("ha-card style");
-        if(oldStyleTag)
-          this.card.shadowRoot.querySelector("ha-card").removeChild(oldStyleTag);
-        this.card.shadowRoot.querySelector("ha-card").appendChild(styleTag);
-      }
-
-    }
-  }
-
-  set hass(hass) {
-    this._hass = hass;
-    this.update_content()
+    const card = this.shadowRoot.querySelector("hui-markdown-card");
+    return (card && card.getCardSize) ? card.getCardSize() : 1;
   }
 }
 
