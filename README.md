@@ -1,5 +1,8 @@
 useful-markdown-card
 ====================
+
+# This is deprecated - Use [markdown-mod](https://github.com/thomasloven/lovelace-markdown-mod) instead
+
 A markdown card for lovelace, which does a bit more.
 
 This card requires [card-tools](https://github.com/thomasloven/lovelace-card-tools) to be installed.

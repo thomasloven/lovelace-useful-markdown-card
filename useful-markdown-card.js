@@ -59,6 +59,12 @@ class UsefulMarkdownCard extends cardTools.LitElement {
   }
 }
 
+cardTools.hass.callService('persistent_notification', 'create', {
+  notification_id: 'umc-deprecation',
+  title: 'Deprecated lovelace plugin',
+  message: 'The `useful-markdown-card` plugin you are using is deprecated and should be replaced with `markdown-mod`. See https://github.com/thomasloven/lovelace-markdown-mod',
+});
+
 customElements.define('useful-markdown-card', UsefulMarkdownCard);
 });
 
